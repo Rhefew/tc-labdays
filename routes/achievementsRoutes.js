@@ -8,10 +8,14 @@ router
 .get(archievementsController.getAchievements)
 .post(archievementsController.createAchievement)
 
+router
+.route('/users/:userId/achievements')
+.get(archievementsController.getUserAchievements)
+.post(archievementsController.createUserAchievement)
+
 // router
-// .route('/user/achievements')
-// .get(archievementsController.getUserAchievements)
-// .post(archievementsController.createUserAchievement)
+// .route('/groups/:groupId/achievements')
+// .get(archievementsController.getGroupAchievements)
 
 // router
 // .route('/leaderboard/:groupId')
