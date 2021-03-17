@@ -101,16 +101,16 @@ exports.getGroupLeaderboard = catchAsync(async (req, res) => {
                 achievementsForUser.forEach( (a) => {
                     const pointsOfAchievement = allAchievements.find( (ach) => a.achievement_id === ach.achievement_id)
                     if(pointsOfAchievement) totalPoints+= pointsOfAchievement.points * a.level
-                    groupedAchievements.push( { achievement_id: a.achievement_id, level: a.level } )
+                    groupedAchievements.push( { achievement_id: a.achievement_id, level: a.level, points: pointsOfAchievement.points * a.level } )
                 })
 
-                newAchievementGrouped.push( {user_id: currentUserId, points: totalPoints, achievements: groupedAchievements} )
+                newAchievementGrouped.push( {user_id: currentUserId, total_points: totalPoints, achievements: groupedAchievements} )
     
             }
         })
         
         return res.status(200).json({
-            result: newAchievementGrouped.sort(sortBy("-points"))
+            result: newAchievementGrouped.sort(sortBy("-total_points"))
         })
     }
 })
