@@ -10,17 +10,12 @@ router
 
 router
 .route('/users/:userId/achievements')
-.get(archievementsController.getUserAchievements)
+.get(archievementsController.getUserAchievementsForGroup)
 .post(archievementsController.createUserAchievement)
 
-// router
-// .route('/groups/:groupId/achievements')
-// .get(archievementsController.getGroupAchievements)
-
-// router
-// .route('/leaderboard/:groupId')
-// .get(archievementsController.getLeaderboard)
-
+router
+.route('/groups/:groupId/leaderboard')
+.get(archievementsController.getGroupLeaderboard)
 
 
 module.exports = router
