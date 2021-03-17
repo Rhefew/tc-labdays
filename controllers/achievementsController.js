@@ -52,7 +52,7 @@ exports.getUserAchievementsForGroup = catchAsync(async (req, res) => {
     console.log(req.params)
 
     const { userId } = req.params
-    const { group_id } = req.body
+    const { group_id } = req.query
     const allAchievements = await Achievement.find().exec();
     const userAchievements = await UserAchievement.find( {user_id: userId, group_id: group_id} ).exec();
 
