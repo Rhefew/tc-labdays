@@ -25,7 +25,6 @@ exports.getAchievements =  catchAsync(async (req, res) => {
 exports.createAchievement =  catchAsync(async (req, res) => {
     
     const body = req.body
-    console.log(body)
 
     const storedAchievement = await Achievement.findOne( { achievement_id: body.achievement_id } )
         if(!storedAchievement){
@@ -49,16 +48,15 @@ exports.createAchievement =  catchAsync(async (req, res) => {
 })
 
 exports.getUserAchievementsForGroup = catchAsync(async (req, res) => {
-    console.log(req.params)
 
     const { userId } = req.params
     const { group_id } = req.query
     const userAchievements = await UserAchievement.find( {user_id: userId, group_id: group_id} ).exec();
 
     if(userAchievements){
-        let result = Object.values(userAchievements.reduce((a,{user_id, achievement_id}) => {
+        let result = Object.values(userAchievements.reduce((a,{user_id, achievement_id, updated_at}) => {
             let key = `${user_id}_${achievement_id}`;
-            a[key] = a[key] || {user_id, achievement_id, level : 0};
+            a[key] = a[key] || {user_id, achievement_id, level : 0, updated_at};
             a[key].level++;
             return a;
           }, {}));
@@ -106,12 +104,12 @@ exports.getGroupLeaderboard = catchAsync(async (req, res) => {
                     const pointsOfAchievement = allAchievements.find( (ach) => a.achievement_id === ach.achievement_id)
                     if(!pointsOfAchievement) return
 
-                    console.log(pointsOfAchievement.toString())
-                    if(pointsOfAchievement) totalPoints+= calcPoints(pointsOfAchievement.points, a.level)
-                    groupedAchievements.push( { achievement_id: a.achievement_id, level: a.level, points: calcPoints(pointsOfAchievement.points, a.level) } )
+
+                    totalPoints+= calcPoints(pointsOfAchievement.points, a.level)
+                    groupedAchievements.push( { achievement_id: a.achievement_id, level: a.level, points: calcPoints(pointsOfAchievement.points, a.level), updated_at: pointsOfAchievement.updated_at } )
                 })
 
-                newAchievementGrouped.push( {user_id: currentUserId, total_points: totalPoints, achievements: groupedAchievements} )
+                newAchievementGrouped.push( {user_id: currentUserId, total_points: totalPoints, achievements: groupedAchievements } )
     
             }
         })
@@ -128,10 +126,7 @@ exports.createUserAchievement =  catchAsync(async (req, res) => {
     const { group_id, achievement_id } = req.body
     const body = { group_id: group_id, user_id: userId, achievement_id: achievement_id }
 
-    console.log(body)
-    
     const achievement = await UserAchievement.create(body)
-    console.log("ACHJIEVEMEASLKDJALSK", achievement)        
     
     const achievements = await UserAchievement.find( {group_id: group_id, user_id: userId, achievement_id: achievement.achievement_id} ).exec();
 
