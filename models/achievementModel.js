@@ -6,6 +6,7 @@ const Achievement = mongoose.model('Achievement', {
     name: { type: String, default: "", unique: true },
     description: { type: String },
     points: { type : Number, default: 0 },    
+    special: {type: Boolean, default: false},
     __v: { type: Number, select: false },
     // _id: { type: Number, insert:true, select: false }
 })
